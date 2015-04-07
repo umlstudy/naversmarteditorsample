@@ -4,7 +4,6 @@ apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'jetty'
 
-
 // 반드시 수정 시작
 // 자바 버전
 sourceCompatibility = 1.6
@@ -36,13 +35,13 @@ eclipse {
 
 
 war {
-    baseName = 'someWebApp'
-    archiveName = "something"
+    baseName = "$archivesBaseName"
+    archiveName = "$archivesBaseName"
     from 'war' 
  
     manifest {
-        attributes 'Implementation-Title': 'something'
-        attributes 'Implementation-Version': 'some version'
+        attributes 'Implementation-Title': "$archivesBaseName"
+        attributes 'Implementation-Version': "$archivesBaseName"
         attributes provider: 'gradle'
     }
 }
@@ -59,13 +58,18 @@ task jettyRunTasks << {
 
 // 의존성 설정
 dependencies {
-	//compile("org.springframework:spring-context:$project.ext.springVersion")
+	compile("org.aspectj:aspectjrt:1.7.4")
+	compile("org.aspectj:aspectjweaver:1.7.4")
+	compile("org.springframework:spring-context:$project.ext.springVersion")
+	compile("org.springframework:spring-orm:$project.ext.springVersion")
+	compile("org.springframework:spring-webmvc:$project.ext.springVersion")
 	//compile("org.springframework:spring-tx:$project.ext.springVersion")
-	//compile("org.springframework:spring-orm:$project.ext.springVersion")
-	//compile("org.springframework:spring-webmvc:$project.ext.springVersion")
 	//compile('commons-dbcp:commons-dbcp:1.4')
 	//compile('net.java.dev.rome:rome:1.0.0')
 	
+	compile("javax.servlet:jstl:1.2")
+	compile("taglibs:standard:1.1.2")
+   
 	compile('javax.servlet:jstl:1.2')
 	
 	compile('log4j:log4j:1.2.14')
