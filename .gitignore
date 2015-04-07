@@ -2,3 +2,7 @@
 *.log
 bin/
 build/
+.gradle/
+.settings/
+/.classpath
+/.project
