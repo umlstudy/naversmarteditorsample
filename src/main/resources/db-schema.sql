@@ -1,0 +1,6 @@
+--CREATE TABLE person (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255));
+
+CREATE TABLE uploadedFileBinary (
+	hashCode INTEGER IDENTITY,
+	content  VARBINARY(1000000)
+);
