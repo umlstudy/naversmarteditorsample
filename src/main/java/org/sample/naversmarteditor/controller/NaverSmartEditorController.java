@@ -41,7 +41,7 @@ public class NaverSmartEditorController {
 	    System.out.println("에디터 컨텐츠값:"+request.getParameter("editor"));
 	}
 	
-	//단일파일업로드
+	// 단일파일업로드
 	@RequestMapping("photoUpload")
 	public String photoUpload(HttpServletRequest request, PhotoVo vo){
 	    String callback = vo.getCallback();
@@ -76,7 +76,7 @@ public class NaverSmartEditorController {
 	    return "redirect:" + callback + "?callback_func="+callback_func+file_result;
 	}
 	
-	//다중파일업로드
+	// 다중파일업로드
 	@RequestMapping("multiplePhotoUpload")
 	public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response){
 	    try {
