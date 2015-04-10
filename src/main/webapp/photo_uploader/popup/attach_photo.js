@@ -336,7 +336,7 @@
     	
     	var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
     	
-    	sUploadURL= contextPath + '/navereditor/multiplePhotoUpload.htm'; 	//upload URL
+    	sUploadURL= contextPath + '/binaryImage/uploadImages.htm'; 	//upload URL
     	
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {
@@ -358,6 +358,7 @@
 			method : "post",
 			onload : function(res){ // 요청이 완료되면 실행될 콜백 함수
 				var sResString = res._response.responseText;
+		    	alert("sResString : " + sResString);
 				if (res.readyState() == 4) {
 					if(sResString.indexOf("NOTALLOW_") > -1){
 						var sFileName = sResString.replace("NOTALLOW_", "");
@@ -379,6 +380,7 @@
     }
     
     function makeArrayFromString(sResString){
+    	alert("sResString : " + sResString);
     	var	aTemp = [],
     		aSubTemp = [],
     		htTemp = {}

@@ -1,14 +1,16 @@
-package org.sample.naversmarteditor.springconfig.context;  
+package org.sample.naversmarteditor.springconfig;  
 
 import javax.sql.DataSource;
 
 import org.hsqldb.jdbc.JDBCDriver;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-import org.sample.naversmarteditor.mapper.UploadedFileNameMapper;
+import org.mybatis.spring.annotation.MapperScan;
+import org.sample.naversmarteditor.util.DBConfigUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -16,9 +18,17 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-  
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+@Profile("real")
 @Configuration 
+@EnableWebMvc
 @EnableTransactionManagement
+@ComponentScan(basePackages = {
+		"org.sample.naversmarteditor.controller",
+		"org.sample.naversmarteditor.service"})
+@MapperScan("org.sample.naversmarteditor.mapper")
 public class AppConfig {  
 	
 	@Value("classpath:db-schema.sql")
@@ -26,15 +36,24 @@ public class AppConfig {
 
 	@Value("classpath:db-test-data.sql")
 	private Resource dataScript;
+	
+	@Bean
+	public InternalResourceViewResolver viewResolver() {
+		InternalResourceViewResolver resolver = 
+                    new InternalResourceViewResolver();
+		resolver.setPrefix("/WEB-INF/pages/");
+		resolver.setSuffix(".jsp");
+		return resolver;
+	}
 
 	@Bean
-	public SimpleDriverDataSource getDataSource() {
+	public DataSource getDataSource() {
 		SimpleDriverDataSource simpleDriverDataSource = new SimpleDriverDataSource();
 		simpleDriverDataSource.setDriverClass(JDBCDriver.class);
 		simpleDriverDataSource.setUrl("jdbc:hsqldb:mem:testdb");
 		simpleDriverDataSource.setUsername("");
 		simpleDriverDataSource.setPassword("");
-		return simpleDriverDataSource;
+		return DBConfigUtil.createProxyDataSource(simpleDriverDataSource);
 	}
 	
 	@Bean
@@ -63,45 +82,5 @@ public class AppConfig {
 		bean.setDataSource(ds);
 		return bean;
 	}
-	
-	@Bean(name = "mapper")
-	public MapperFactoryBean<UploadedFileNameMapper> getMapper(DataSource ds, SqlSessionFactoryBean factory) {
-		MapperFactoryBean<UploadedFileNameMapper> mapper = new MapperFactoryBean<UploadedFileNameMapper>();
-		try {
-			mapper.setMapperInterface(UploadedFileNameMapper.class);
-			mapper.setSqlSessionFactory(factory.getObject());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return mapper;
-	}
-	
-	@Bean(name = "service")
-	public UploadFileService getService() {
-		return new UploadFileService();
-	}
-	
-//    @Bean(name = "dataSource")
-//    public DataSource getDataSource(){
-//        DataSource dataSource = createDataSource();
-//        DatabasePopulatorUtils.execute(createDatabasePopulator(), dataSource);
-//        return dataSource;
-//    }
-//
-//    private DatabasePopulator createDatabasePopulator() {
-//        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-//        databasePopulator.setContinueOnError(true);
-//        databasePopulator.addScript(new ClassPathResource("schema.sql"));
-//        return databasePopulator;
-//    }
-//
-//    private SimpleDriverDataSource createDataSource() {
-//        SimpleDriverDataSource simpleDriverDataSource = new SimpleDriverDataSource();
-//        simpleDriverDataSource.setDriverClass(org.h2.Driver.class);
-//        simpleDriverDataSource.setUrl("jdbc:h2:target/database/example;AUTO_RECONNECT=TRUE");
-//        simpleDriverDataSource.setUsername("");
-//        simpleDriverDataSource.setPassword("");
-//        return simpleDriverDataSource;      
-//    }
 }  
  

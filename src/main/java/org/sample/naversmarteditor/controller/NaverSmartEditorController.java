@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/navereditor")
+@RequestMapping("/naverSmartEditor")
 public class NaverSmartEditorController {
 
-	// @ModelAttribute("params") 파라메터 수신
-	
 	@RequestMapping(method = RequestMethod.POST, value="post")
 	public ModelAndView post(HttpServletRequest request, @ModelAttribute("params") HttpHeaders params) {
 		Map<String, String[]> parameterMap = request.getParameterMap();
